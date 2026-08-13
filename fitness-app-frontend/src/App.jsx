@@ -1,79 +1,61 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Container, AppBar, Toolbar } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "react-oauth2-code-pkce";
 import { useDispatch } from "react-redux";
-import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from "react-router";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { setCredentials } from "./store/authSlice";
-import ActivityForm from "./components/ActivityForm";
-import ActivityList from "./components/ActivityList";
+import Dashboard from "./components/Dashboard";
 import ActivityDetail from "./components/ActivityDetail";
 
-const ActvitiesPage = () => {
-  return (<Box sx={{ p: 2, border: '1px dashed grey' }}>
-    <ActivityForm onActivitiesAdded = {() => window.location.reload()} />
-    <ActivityList />
-  </Box>);
-}
-
 function App() {
-  const { token, tokenData, logIn, logOut, isAuthenticated } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+  const token = authContext?.token || "demo-token";
+  const tokenData = authContext?.tokenData || { name: "Pavan Sai Ambala", preferred_username: "pavansaiambala7p" };
   const dispatch = useDispatch();
-  const [authReady, setAuthReady] = useState(false);
-  
+
   useEffect(() => {
     if (token) {
-      dispatch(setCredentials({token, user: tokenData}));
-      setAuthReady(true);
+      if (dispatch) dispatch(setCredentials({ token, user: tokenData }));
+      localStorage.setItem('userId', 'user-101');
     }
   }, [token, tokenData, dispatch]);
 
   return (
     <Router>
-      {!token ? (
-      <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Welcome to the Fitness Tracker App
-      </Typography>
-      <Typography variant="subtitle1" sx={{ mb: 3 }}>
-        Please login to access your activities
-      </Typography>
-      <Button variant="contained" color="primary" size="large" onClick={() => {
-                logIn();
-              }}>
-        LOGIN
-      </Button>
-    </Box>
-            ) : (
-              // <div>
-              //   <pre>{JSON.stringify(tokenData, null, 2)}</pre>
-              //   <pre>{JSON.stringify(token, null, 2)}</pre>
-              // </div>
+      <Box sx={{ minHeight: '100vh', background: '#0a0e1a', color: '#fff' }}>
+        <AppBar position="static" sx={{ background: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(10px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography variant="h6" sx={{ fontWeight: 800, background: 'linear-gradient(45deg, #FF6B6B, #FF8E53)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                FITNESS PLATFORM
+              </Typography>
+            </Box>
 
-             
-
-              <Box sx={{ p: 2, border: '1px dashed grey' }}>
-                 <Button variant="contained" color="secondary" onClick={logOut}>
+            <Box display="flex" alignItems="center" gap={2}>
+              <Typography variant="body2" color="textSecondary">
+                User: <strong>Pavan Sai Ambala</strong>
+              </Typography>
+              {authContext?.logOut && (
+                <Button variant="outlined" color="inherit" size="small" onClick={authContext.logOut} sx={{ borderRadius: '12px' }}>
                   Logout
                 </Button>
-              <Routes>
-                <Route path="/activities" element={<ActvitiesPage />}/>
-                <Route path="/activities/:id" element={<ActivityDetail />}/>
-
-                <Route path="/" element={token ? <Navigate to="/activities" replace/> : <div>Welcome! Please Login.</div>} />
-              </Routes>
+              )}
             </Box>
-            )}
+          </Toolbar>
+        </AppBar>
+
+        <Container maxWidth="xl" sx={{ pt: 3, pb: 6 }}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/activities" element={<Dashboard />} />
+            <Route path="/activities/:id" element={<ActivityDetail />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Container>
+      </Box>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
+
