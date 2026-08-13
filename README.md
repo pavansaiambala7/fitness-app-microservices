@@ -1,72 +1,150 @@
-# Fitness Application – Microservices Platform 🏋️‍♂️⚡
+# Fitness Application – Cloud-Native Microservices Platform 🏋️‍♂️⚡
 
-A high-performance, production-grade microservices platform designed for real-time fitness tracking, activity metrics aggregation, and AI-powered workout & nutrition recommendations. Built using **Java 17+**, **Spring Boot 3.x**, **Spring Cloud**, **LangChain4j + Gemini AI**, **pgvector**, and a **React.js** dashboard with real-time **5-second metric auto-refresh**.
+[![Java 17+](https://img.shields.io/badge/Java-17%2B-007396?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Spring Boot 3.4](https://img.shields.io/badge/Spring%20Boot-3.4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2024.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-cloud)
+[![React.js](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![LangChain4j](https://img.shields.io/badge/LangChain4j-0.36-FF6F61?style=for-the-badge&logo=chainlink&logoColor=white)](https://github.com/langchain4j/langchain4j)
+[![Google Gemini AI](https://img.shields.io/badge/Google%20Gemini-AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-Developed & implemented by **Pavan Sai Ambala** (`@pavansaiambala7p`).
-
----
-
-## 🚀 Key Highlights & Architectural Features
-
-* **6-Service Distributed Backend**: Decoupled microservices architecture following domain-driven boundaries:
-  1. **[eureka](file:///./eureka)**: Service Discovery & Registry Server running on port `8761`.
-  2. **[configserver](file:///./configserver)**: Centralized Configuration Management Server running on port `8888`.
-  3. **[gateway](file:///./gateway)**: Spring Cloud API Gateway serving single-entry routing and global CORS on port `8080`.
-  4. **[userservice](file:///./userservice)**: Profile, identity, and target metrics management running on port `8081`.
-  5. **[activityservice](file:///./activityservice)**: Workout logging, metrics tracking, and real-time live statistics calculation on port `8082`.
-  6. **[aiservice](file:///./aiservice)**: AI Recommendation Engine utilizing **LangChain4j**, **Gemini AI**, and **pgvector RAG** on port `8083`.
-
-* **Database-per-Service Architecture**: Strict database isolation preventing coupling across domain models:
-  * **User Service**: Dedicated **PostgreSQL** database (`fitness_user_db`).
-  * **Activity Service**: Dedicated **MySQL** database (`fitness_activity_db`).
-  * **AI Service**: Dedicated **PostgreSQL** database with **`pgvector`** extension (`fitness_vector_db`).
-
-* **AI-Powered Recommendation Engine**:
-  * Integrates **LangChain4j** with **Google Gemini AI**.
-  * Implements **RAG (Retrieval-Augmented Generation)** knowledge base over sports science & biomechanics vector embeddings stored in `pgvector`.
-  * Formulates tailored post-workout analysis, target intensity adjustments, and safety guidelines.
-
-* **Real-time React.js Dashboard**:
-  * Dynamic live fitness metrics dashboard with automated **5-second refresh interval**.
-  * Visual pulse animation badge indicator showing real-time background sync state.
-  * Interactive workout session logger and live exercise history.
+A high-throughput, cloud-native microservices platform engineered for real-time fitness metric tracking, activity aggregation, and AI-powered exercise & nutrition recommendations. Built following strict **Database-Per-Service** architecture, **RAG (Retrieval-Augmented Generation)** knowledge retrieval using `pgvector`, and a responsive **React.js dashboard with 5-second real-time metrics auto-refresh**.
 
 ---
 
-## 🛠️ Technology Stack
+## 🏛️ System Architecture
 
-| Domain | Technologies Used |
-|---|---|
-| **Backend Core** | Java 17+, Spring Boot 3.4.x, Spring Data JPA, Spring AMQP / RabbitMQ |
-| **Cloud Routing & Config** | Spring Cloud Gateway, Netflix Eureka Service Discovery, Spring Cloud Config Server |
-| **AI & RAG Engine** | LangChain4j, Google Gemini AI (`gemini-1.5-flash`), `pgvector` Vector Store |
-| **Databases** | PostgreSQL, MySQL, pgvector |
-| **Frontend** | React.js, Vite, Material-UI (MUI), Redux Toolkit, Axios |
-| **Containerization** | Docker, Docker Compose |
+![Fitness Application 3D Microservices Architecture](docs/architecture-3d.jpg)
+
+The platform is designed around 6 decoupled, single-responsibility distributed backend services orchestrated via Spring Cloud infrastructure and containerized via Docker Compose:
+
+```
+                                   ┌─────────────────────────────────┐
+                                   │   React.js Real-time Dashboard  │
+                                   │ (5-Second Metric Refresh Loop)  │
+                                   └────────────────┬────────────────┘
+                                                    │
+                                           ┌────────▼────────┐
+                                           │  API Gateway    │
+                                           │   (Port 8080)   │
+                                           └────────┬────────┘
+                                                    │
+                   ┌────────────────────────────────┼────────────────────────────────┐
+                   │                                │                                │
+          ┌────────▼────────┐              ┌────────▼────────┐              ┌────────▼────────┐
+          │  User Service   │              │  Activity MS    │              │  AI Service     │
+          │   (Port 8081)   │              │   (Port 8082)   │              │   (Port 8083)   │
+          └────────┬────────┘              └────────┬────────┘              └────────┬────────┘
+                   │                                │                                │
+          ┌────────▼────────┐              ┌────────▼────────┐              ┌────────▼────────┐
+          │  PostgreSQL DB  │              │    MySQL DB     │              │ PostgreSQL +    │
+          │(fitness_user_db)│              │(fitness_act_db) │              │ pgvector RAG DB │
+          └─────────────────┘              └─────────────────┘              └─────────────────┘
+```
 
 ---
 
-## 🐳 Running with Docker Compose
+## 🌟 Key Highlights & Architectural Capabilities
 
-To spin up all 6 backend microservices, 3 databases (PostgreSQL, MySQL, pgvector), RabbitMQ, and the React frontend in one command:
+### 1. 6-Service Distributed Backend Architecture
+* **[eureka](file:///./eureka)** (Port `8761`): Service Registry and Discovery Server using Netflix Eureka for dynamic client-side load balancing and service lookup.
+* **[configserver](file:///./configserver)** (Port `8888`): Centralized Configuration Management Server serving dynamic environment properties via Spring Cloud Config.
+* **[gateway](file:///./gateway)** (Port `8080`): Edge Spring Cloud API Gateway handling single-entry request routing, rate limiting, and global CORS policies.
+* **[userservice](file:///./userservice)** (Port `8081`): Manages user identity, body metrics, calorie targets, and goal preferences.
+* **[activityservice](file:///./activityservice)** (Port `8082`): Handles workout session tracking, exercise logging, and real-time live performance statistics calculation.
+* **[aiservice](file:///./aiservice)** (Port `8083`): AI Recommendation Engine integrating **LangChain4j**, **Google Gemini AI**, and **pgvector RAG**.
+
+### 2. Database-Per-Service Isolation
+To maintain strict domain boundaries and independent scalability, each microservice owns a dedicated, isolated database:
+
+| Microservice | Database Technology | Isolated Schema | Primary Purpose |
+|---|---|---|---|
+| **User Service** | PostgreSQL 15 | `fitness_user_db` | User profiles, body composition, fitness goals |
+| **Activity Service** | MySQL 8.0 | `fitness_activity_db` | Workout logs, duration, calories, activity history |
+| **AI Service** | PostgreSQL + pgvector | `fitness_vector_db` | Sports science RAG knowledge base & vector embeddings |
+
+### 3. AI Fitness Coach (LangChain4j + Gemini AI + pgvector RAG)
+* **Retrieval-Augmented Generation (RAG)**: Ingests sports biomechanics, aerobic heart-rate zones, and recovery research papers into `pgvector` vector store.
+* **Semantic Context Retrieval**: Queries vector embeddings using cosine similarity to retrieve sports science guidelines tailored to the user's specific workout metrics.
+* **Gemini AI Synthesis**: Passes exercise context and user metrics to Google Gemini AI (`gemini-1.5-flash`) via LangChain4j agents to generate custom training feedback, injury prevention rules, and next-workout suggestions.
+
+### 4. Real-Time React.js Dashboard (5-Second Auto-Refresh)
+* **Live Polling Loop**: Automated background metric polling every **5 seconds** without full-page reloads.
+* **Visual Pulse Badge**: Live status indicator badge showing real-time background sync state and countdown ticker.
+* **Glassmorphism KPI Cards**: Displays live aggregated metrics for Total Calories Burned, Total Duration, Active Workout Streak, and AI Insights.
+* **Interactive Workout Logger**: Embedded dialog for logging new workout sessions with real-time UI updates.
+
+---
+
+## 🛠️ Complete Technology Stack
+
+```
+├── Backend Framework:      Java 17+, Spring Boot 3.4.3, Spring Cloud 2024.0.0
+├── Cloud Infrastructure:   Netflix Eureka, Spring Cloud Gateway, Spring Cloud Config
+├── AI Engine:              LangChain4j 0.36.2, Google Gemini AI API, pgvector
+├── Messaging & Async:      Spring AMQP / RabbitMQ
+├── Persistence Layer:      Spring Data JPA, Hibernate, PostgreSQL, MySQL
+├── Frontend Stack:         React.js (Vite), Material-UI (MUI), Redux Toolkit, Axios
+└── Infrastructure:         Docker, Docker Compose
+```
+
+---
+
+## 🐳 Docker Deployment & Quick Start
+
+Spin up the entire platform including 6 microservices, 3 databases, RabbitMQ, and the React frontend with a single command:
 
 ```bash
 docker-compose up --build
 ```
 
-### Port Mappings Summary:
-- **React Frontend**: `http://localhost:3000`
-- **API Gateway**: `http://localhost:8080`
-- **Eureka Registry**: `http://localhost:8761`
-- **Config Server**: `http://localhost:8888`
-- **User Service**: `http://localhost:8081`
-- **Activity Service**: `http://localhost:8082`
-- **AI Service**: `http://localhost:8083`
+### 📍 Service Endpoint Reference Matrix
+
+| Service / Container | Endpoint / URL | Service Type |
+|---|---|---|
+| **React Dashboard** | `http://localhost:3000` | Web Frontend |
+| **Spring Cloud API Gateway** | `http://localhost:8080` | API Edge Gateway |
+| **Netflix Eureka Dashboard** | `http://localhost:8761` | Service Registry |
+| **Spring Cloud Config Server** | `http://localhost:8888` | Config Management |
+| **User Microservice** | `http://localhost:8081/api/users` | REST API |
+| **Activity Microservice** | `http://localhost:8082/api/activities` | REST API |
+| **AI Microservice** | `http://localhost:8083/api/recommendations` | REST API |
+| **RabbitMQ Management Console** | `http://localhost:15672` | Message Broker UI |
+
+---
+
+## 📦 Local Manual Development Setup
+
+If running microservices individually:
+
+1. **Start Eureka Discovery Server**:
+   ```bash
+   cd eureka && ./mvnw spring-boot:run
+   ```
+2. **Start Config Server**:
+   ```bash
+   cd configserver && ./mvnw spring-boot:run
+   ```
+3. **Start Core Microservices** (`userservice`, `activityservice`, `aiservice`, `gateway`):
+   ```bash
+   cd userservice && ./mvnw spring-boot:run
+   cd activityservice && ./mvnw spring-boot:run
+   cd aiservice && ./mvnw spring-boot:run
+   cd gateway && ./mvnw spring-boot:run
+   ```
+4. **Launch React Dashboard**:
+   ```bash
+   cd fitness-app-frontend
+   npm install
+   npm run dev
+   ```
 
 ---
 
 ## 👤 Developer Profile
 
-* **Developer:** Pavan Sai Ambala  
-* **GitHub:** [@pavansaiambala7](https://github.com/pavansaiambala7)  
-* **Academic Reference:** Based on curriculum guidelines from [EmbarkX](https://www.embarkx.com) courses.
+* **Architect & Developer:** Pavan Sai Ambala  
+* **GitHub Profile:** [@pavansaiambala7](https://github.com/pavansaiambala7)  
+* **Repository:** [https://github.com/pavansaiambala7/fitness-app-microservices](https://github.com/pavansaiambala7/fitness-app-microservices)
