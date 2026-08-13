@@ -1,38 +1,47 @@
 package com.fitness.activityservice.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
-@Document(collection = "activities")
+@Entity
+@Table(name = "activities")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Activity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(nullable = false)
     private String userId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ActivityType type;
-    private Integer duration;
+
+    private Integer duration; // in minutes
+
     private Integer caloriesBurned;
+
+    private Integer stepsCount;
+
+    private String intensity; // LOW, MEDIUM, HIGH
+
     private LocalDateTime startTime;
 
-    @Field("metrics")
-    private Map<String, Object> additionalMetrics;
-
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }
+
