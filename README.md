@@ -150,3 +150,6 @@ If running microservices individually:
 * **GitHub Profile:** [@pavansaiambala7](https://github.com/pavansaiambala7)  
 * **Repository:** [https://github.com/pavansaiambala7/fitness-app-microservices](https://github.com/pavansaiambala7/fitness-app-microservices)
 
+<!-- Sole developer project verified by pavansaiambala7 -->
+
+
