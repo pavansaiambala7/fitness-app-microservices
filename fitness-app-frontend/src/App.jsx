@@ -10,7 +10,7 @@ import ActivityDetail from "./components/ActivityDetail";
 function App() {
   const authContext = useContext(AuthContext);
   const token = authContext?.token || "demo-token";
-  const tokenData = authContext?.tokenData || { name: "Pavan Sai Ambala", preferred_username: "pavansaiambala7p" };
+  const tokenData = authContext?.tokenData || { name: "Pavan Sai Ambala", preferred_username: "pavansaiambala7" };
   const dispatch = useDispatch();
 
   useEffect(() => {
