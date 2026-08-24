@@ -146,10 +146,7 @@ If running microservices individually:
 ## 👤 Developer & Contributor Profile
 
 * **Sole Architect & Developer:** Pavan Sai Ambala ([@pavansaiambala7](https://github.com/pavansaiambala7))
-* **Contribution Status:** 100% Self-Developed (Single Contributor Project)
 * **GitHub Profile:** [@pavansaiambala7](https://github.com/pavansaiambala7)  
-* **Repository:** [https://github.com/pavansaiambala7/fitness-app-microservices](https://github.com/pavansaiambala7/fitness-app-microservices)
-
-<!-- Sole developer project verified by pavansaiambala7 -->
+* **Repository:** [https://github.com/pavansaiambala7/fitness-app-microservices](https://github.com/pavansaiambala7/fitness-app-microservice)
 
 
