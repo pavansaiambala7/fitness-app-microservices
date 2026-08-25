@@ -16,7 +16,10 @@ public class FitnessAnalysisDTO {
     private String paceAnalysis;
     private String heartRateAnalysis;
     private String calorieAnalysis;
+    private String dietGuidance;
+    private String hydrationPlan;
     private List<String> improvements;
     private List<String> workoutSuggestions;
     private List<String> safetyGuidelines;
+    private List<String> nutritionTips;
 }

@@ -2,7 +2,7 @@ import { Box, Button, Typography, Container, AppBar, Toolbar } from "@mui/materi
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "react-oauth2-code-pkce";
 import { useDispatch } from "react-redux";
-import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router";
 import { setCredentials } from "./store/authSlice";
 import Dashboard from "./components/Dashboard";
 import ActivityDetail from "./components/ActivityDetail";

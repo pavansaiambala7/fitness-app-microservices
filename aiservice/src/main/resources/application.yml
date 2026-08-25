@@ -3,3 +3,8 @@ spring:
     name: ai-service
   config:
     import: optional:configserver:http://localhost:8888
+
+rag:
+  chunking:
+    max-segment-size: 600
+    max-overlap-size: 120

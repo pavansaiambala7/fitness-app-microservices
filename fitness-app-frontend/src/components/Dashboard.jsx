@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { 
   Box, Container, Typography, Grid, Button, Chip, CircularProgress, 
-  Paper, IconButton, Dialog, DialogTitle, DialogContent, Tooltip, Alert
+  Paper, IconButton, Dialog, DialogTitle, DialogContent, Tooltip, Alert, Stack
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
@@ -9,9 +9,12 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import TimerIcon from '@mui/icons-material/Timer';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddIcon from '@mui/icons-material/Add';
+import LayersIcon from '@mui/icons-material/Layers';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LiveStatsCard from './LiveStatsCard';
 import ActivityList from './ActivityList';
 import ActivityForm from './ActivityForm';
+import RagChunkExplorer from './RagChunkExplorer';
 import { getLiveStats, getUserRecommendations } from '../services/api';
 
 const Dashboard = () => {
@@ -28,6 +31,7 @@ const Dashboard = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [openRagModal, setOpenRagModal] = useState(false);
   const [aiOverview, setAiOverview] = useState(null);
 
   const fetchDashboardData = async () => {
@@ -77,11 +81,11 @@ const Dashboard = () => {
             Fitness Platform Dashboard
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
-            Microservices Real-time Performance & AI Coaching Engine
+            Microservices Real-time Performance & Dual-Domain RAG (Workouts + Diet)
           </Typography>
         </Box>
 
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
           <Chip 
             icon={<span className="pulse-dot" />} 
             label={`LIVE AUTO-REFRESH (${countdown}s)`} 
@@ -94,6 +98,25 @@ const Dashboard = () => {
               <RefreshIcon className={isRefreshing ? "spin-animation" : ""} />
             </IconButton>
           </Tooltip>
+          <Button 
+            variant="outlined"
+            startIcon={<LayersIcon />}
+            onClick={() => setOpenRagModal(true)}
+            sx={{ 
+              borderRadius: '24px', 
+              px: 2.5, 
+              py: 1.2,
+              fontWeight: 700,
+              borderColor: '#38bdf8',
+              color: '#38bdf8',
+              '&:hover': {
+                borderColor: '#0ea5e9',
+                background: 'rgba(56, 189, 248, 0.1)'
+              }
+            }}
+          >
+            RAG Chunk Explorer
+          </Button>
           <Button 
             variant="contained" 
             startIcon={<AddIcon />}
@@ -120,15 +143,25 @@ const Dashboard = () => {
           sx={{ 
             mb: 4, 
             borderRadius: '16px', 
-            background: 'linear-gradient(135deg, rgba(63,81,181,0.15) 0%, rgba(156,39,176,0.15) 100%)', 
-            border: '1px solid rgba(156,39,176,0.3)',
+            background: 'linear-gradient(135deg, rgba(63,81,181,0.18) 0%, rgba(16,185,129,0.18) 100%)', 
+            border: '1px solid rgba(56, 189, 248, 0.3)',
             color: '#fff'
           }}
         >
           <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#FFD700', mb: 0.5 }}>
-            Gemini AI + LangChain4j RAG Coach Insight:
+            Gemini AI + LangChain4j Dual RAG Coach Insight:
           </Typography>
-          {aiOverview.recommendation}
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            {aiOverview.recommendation}
+          </Typography>
+          {aiOverview.dietGuidance && (
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1, pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+              <RestaurantIcon sx={{ color: '#34d399', fontSize: 18 }} />
+              <Typography variant="caption" sx={{ color: '#6ee7b7', fontWeight: 600 }}>
+                Nutrition Target: {aiOverview.dietGuidance}
+              </Typography>
+            </Stack>
+          )}
         </Alert>
       )}
 
@@ -221,6 +254,12 @@ const Dashboard = () => {
           }} />
         </DialogContent>
       </Dialog>
+
+      {/* RAG Knowledge Base & Chunking Explorer Dialog */}
+      <RagChunkExplorer 
+        open={openRagModal} 
+        onClose={() => setOpenRagModal(false)} 
+      />
     </Container>
   );
 };

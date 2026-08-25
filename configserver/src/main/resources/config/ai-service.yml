@@ -42,3 +42,8 @@ gemini:
 
 pgvector:
   enabled: ${PGVECTOR_ENABLED:false}
+
+rag:
+  chunking:
+    max-segment-size: 600
+    max-overlap-size: 120

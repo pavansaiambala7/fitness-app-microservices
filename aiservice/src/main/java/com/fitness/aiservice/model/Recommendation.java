@@ -22,10 +22,15 @@ public class Recommendation {
     private String activityId;
     private String userId;
     private String activityType;
+    private int duration;
+    private int caloriesBurned;
     private String recommendation;
+    private String dietGuidance;
+    private String hydrationPlan;
     private List<String> improvements;
     private List<String> suggestions;
     private List<String> safety;
+    private List<String> nutritionTips;
 
     @CreatedDate
     private LocalDateTime createdAt;
